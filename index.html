@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Apoyo Emocional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .emoji-header {
+            font-size: 3em;
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+        }
+
+        .option-btn {
+            flex: 1;
+            padding: 12px 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85em;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .option-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .result {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .result-emoji {
+            font-size: 4em;
+            margin-bottom: 10px;
+        }
+
+        .result-title {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .advice {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+        }
+
+        .advice-title {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 0 10px 10px 0;
+            margin: 10px 0;
+        }
+
+        .tip-title {
+            color: #4caf50;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .breathing-exercise {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .breath-circle {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .qr-section {
+            text-align: center;
+        }
+
+        .qr-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        .qr-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        #qrcode {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .tip-emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji-header">&#127800;</div>
+        <h1>Centro de Apoyo Emocional</h1>
+        
+        <div class="card" id="surveySection">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            
+            <div id="questionsContainer"></div>
+            
+            <button class="btn" id="submitSurvey" onclick="submitSurvey()">Ver Resultados</button>
+        </div>
+
+        <div class="card hidden" id="resultSection">
+            <div class="result">
+                <div class="result-emoji" id="resultEmoji">&#128077;</div>
+                <div class="result-title" id="resultTitle">Gracias por compartir</div>
+                <p id="resultMessage">Cada paso que das es importante. Aqui tienes algo de ayuda.</p>
+            </div>
+            
+            <div id="adviceContainer"></div>
+            
+            <button class="btn btn-secondary" onclick="showDistraction()">&#127775; Obtener mas consejos aleatorios</button>
+            <button class="btn" onclick="restartSurvey()" style="margin-top: 10px;">&#128260; Nueva evaluacion</button>
+        </div>
+
+        <div class="card hidden" id="distractionSection">
+            <div class="tip-card" id="tipCard">
+                <div class="tip-emoji" id="tipEmoji">&#128161;</div>
+                <p id="tipText">Aqui aparecera un consejo aleatorio de ayuda...</p>
+            </div>
+            
+            <button class="btn btn-success" onclick="newRandomTip()">&#127922; Nuevo consejo</button>
+            
+            <div class="breathing-exercise">
+                <h3>&#127807; Ejercicio de respiracion guiada</h3>
+                <p>Sigamos juntos:inhala (4s) - manten (4s) - exhala (4s)</p>
+                <div class="breath-circle" id="breathCircle">&#127807;</div>
+                <p id="breathText">Listo... podemos comenzar</p>
+                <button class="btn btn-success" onclick="toggleBreathing()" id="breathBtn">&#9654; Iniciar ejercicio</button>
+                <button class="btn" onclick="toggleBreathing()" id="stopBreathBtn" style="display: none;">&#9632; Detener</button>
+            </div>
+            
+            <button class="btn" onclick="showResults()" style="margin-top: 10px;">&larr; Volver a mis resultados</button>
+        </div>
+
+        <div class="card" id="qrSection">
+            <h2 style="text-align: center; color: #667eea; margin-bottom: 15px;">&#128241; Generador de QR</h2>
+            <p style="text-align: center;">Pega la URL donde subas tu pagina y genera el codigo QR</p>
+            
+            <input type="text" class="qr-input" id="urlInput" placeholder="https://tusitio.com/apoyo-emocional.html">
+            
+            <button class="btn" onclick="generarQR()">&#10024; Generar QR</button>
+            
+            <div id="qrcode"></div>
+            
+            <button class="btn btn-secondary" onclick="downloadQR()" id="downloadBtn" style="display: none;">&#128190; Descargar QR</button>
+        </div>
+    </div>
+
+    <script>
+        var questions = [
+            { id: 1, text: "Como te has sentido emocionalmente?", emoji: "&#128532;", options: ["Muy bien", "Bien", "Regular", "Mal", "Muy mal"] },
+            { id: 2, text: "Cuanto necesitas desahogarte con alguien?", emoji: "&#128488;", options: ["Nada", "Poco", "Algo", "Bastante", "Mucho"] },
+            { id: 3, text: "Cuanto te afectan tus pensamientos negativos?", emoji: "&#128269;", options: ["Nada", "Poco", "Algo", "Bastante", "Mucho"] },
+            { id: 4, text: "Que tanto te cuesta dormir o descansar?", emoji: "&#128564;", options: ["Nada", "Poco", "Algo", "Bastante", "Mucho"] },
+            { id: 5, text: "Cuanto necesitas apoyo o compania ahora?", emoji: "&#129309;", options: ["Nada", "Poco", "Algo", "Bastante", "Mucho"] }
+        ];
+
+        var answers = {};
+        var currentQuestion = 0;
+        var breathingInterval = null;
+        var isBreathing = false;
+
+        var highNeedAdvice = [
+            { emoji: "&#128588;", title: "Tus sentimientos son validos", text: "Esta bien no estar bien. Lo que sientes es importante y tienes todo el derecho de sentirlo." },
+            { emoji: "&#128222;", title: "Busca apoyo profesional", text: "Si sientes que esto es demasiado, considera hablar con un profesional de salud mental." },
+            { emoji: "&#127769;", title: "Momento de descanso", text: "Date permiso de descansar. No tienes que resolver todo ahora mismo." },
+            { emoji: "&#128170;", title: "Eres mas fuerte de lo que crees", text: "Has enfrentado cosas difficiles antes y ahora estas aqui, buscando ayuda. Eso ya demuestra tu fortaleza." },
+            { emoji: "&#129309;", title: "No estas solo/a", text: "Hay personas que se preocupan por ti. Hay alguien que quiere ayudarte." }
+        ];
+
+        var mediumNeedAdvice = [
+            { emoji: "&#127752;", title: "Un paso a la vez", text: "No tienes que resolver todo de golpe. Cada pequeno paso cuenta." },
+            { emoji: "&#127919;", title: "Enfocate en lo que puedes controlar", text: "Hay cosas que no podemos cambiar, pero si podemos controlar como respondemos." },
+            { emoji: "&#9200;", title: "Toma un momento para ti", text: "Dedica aunque sea 5 minutos al dia para hacer algo que te guste." },
+            { emoji: "&#128221;", title: "Escribe tus pensamientos", text: "Expresar por escrito lo que sientes puede ayudar a procesar tus emociones." },
+            { emoji: "&#128694;", title: "Muevete un poco", text: "Un paseo corto o algo de movimiento fisico puede mejorar tu animo." }
+        ];
+
+        var lowNeedAdvice = [
+            { emoji: "&#127775;", title: "Sigue asi", text: "Excelente que estes bien! Sigue cuidando de ti mismo y de tus seres queridos." },
+            { emoji: "&#127881;", title: "Celebra tus logros", text: "Tomate un momento para reconocer todo lo que has logrado. Felicidades!" },
+            { emoji: "&#10041;", title: "Comparte tu energia positiva", text: "Tu buen animo puede iluminar el dia de alguien mas." },
+            { emoji: "&#127822;", title: "Mantener esa energia", text: "Sigue haciendo las cosas que te hacen sentir bien." },
+            { emoji: "&#11088;", title: "Date un regalo", text: "Date una pequena recompensa por todo tu esfuerzo. Te la mereces!" }
+        ];
+
+        var randomTips = [
+            { emoji: "&#127804;", text: "Recuerda que cada dia es una nueva oportunidad para empezar de nuevo." },
+            { emoji: "&#129436;", text: "El cambio mas dificil siempre comienza con un solo paso." },
+            { emoji: "&#9728;", text: "Aunque hoy sea oscuro, el sol siempre vuelve a salir." },
+            { emoji: "&#127754;", text: "Como las olas del mar, tus sentimientos vienen y van. Todo es temporal." },
+            { emoji: "&#11088;", text: "Eres mas fuerte de lo que crees. Tambien has superado dias difficiles antes." },
+            { emoji: "&#129717;", text: "Esta bien pedir ayuda. Es un signo de fortaleza, no de debilidad." },
+            { emoji: "&hearts;", text: "Tu valor no depende de como te sientas en este momento." },
+            { emoji: "&#127752;", text: "Despues de la lluvia siempre viene el arcoiris." },
+            { emoji: "&#127793;", text: "En los momentos mas oscuros, es cuando ves las estrellas mas brillantes." },
+            { emoji: "&#128412;", text: "Haz las paces con tu pasado y enfocate en el presente." },
+            { emoji: "&#128293;", text: "Eres capaz de lograr cosas increibles. No dudes de ti mismo." },
+            { emoji: "&#128142;", text: "Las dificultades te hacen mas fuerte, no mas debil." },
+            { emoji: "&#127822;", text: "Igual que un girasol, busca siempre la luz aunque haya nubes." },
+            { emoji: "&#127880;", text: "A veces las cosas mejoran de maneras que no esperamos." }
+        ];
+
+        function initSurvey() {
+            var container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            for (var i = 0; i < questions.length; i++) {
+                var div = document.createElement('div');
+                div.className = 'question';
+                div.id = 'question-' + i;
+                div.style.display = (i === 0) ? 'block' : 'none';
+                
+                var optionsHTML = '';
+                for (var j = 0; j < questions[i].options.length; j++) {
+                    optionsHTML += '<button class="option-btn" onclick="selectOption(' + i + ', ' + j + ', this)">' + questions[i].options[j] + '</button>';
+                }
+                
+                div.innerHTML = '<h3>' + questions[i].emoji + ' ' + questions[i].text + '</h3><div class="options">' + optionsHTML + '</div>';
+                
+                container.appendChild(div);
+            }
+            
+            currentQuestion = 0;
+            updateProgress();
+        }
+
+        function selectOption(questionIndex, optionIndex, btn) {
+            var questionDiv = document.getElementById('question-' + questionIndex);
+            var buttons = questionDiv.querySelectorAll('.option-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('selected');
+            }
+            btn.classList.add('selected');
+            
+            answers[questionIndex] = 5 - optionIndex;
+            
+            setTimeout(function() {
+                if (questionIndex < questions.length - 1) {
+                    document.getElementById('question-' + questionIndex).style.display = 'none';
+                    document.getElementById('question-' + (questionIndex + 1)).style.display = 'block';
+                    currentQuestion = questionIndex + 1;
+                    updateProgress();
+                }
+            }, 300);
+        }
+
+        function updateProgress() {
+            var progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function submitSurvey() {
+            var totalScore = 0;
+            for (var key in answers) {
+                totalScore += answers[key];
+            }
+            var maxScore = questions.length * 5;
+            var percentage = (totalScore / maxScore) * 100;
+            
+            var level = 'low';
+            if (percentage >= 60) {
+                level = 'high';
+            } else if (percentage >= 30) {
+                level = 'medium';
+            }
+            
+            showResults(level);
+        }
+
+        function showResults(level) {
+            document.getElementById('surveySection').classList.add('hidden');
+            document.getElementById('distractionSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+            
+            var advice, emoji, title;
+            if (level === 'high') {
+                advice = highNeedAdvice;
+                emoji = '&#128588;';
+                title = 'Tu bienestar es importante';
+            } else if (level === 'medium') {
+                advice = mediumNeedAdvice;
+                emoji = '&#127769;';
+                title = 'Un poco de apoyo';
+            } else {
+                advice = lowNeedAdvice;
+                emoji = '&#127775;';
+                title = 'Vas muy bien';
+            }
+            
+            document.getElementById('resultEmoji').innerHTML = emoji;
+            document.getElementById('resultTitle').textContent = title;
+            
+            var container = document.getElementById('adviceContainer');
+            container.innerHTML = '';
+            
+            var shuffled = advice.slice().sort(function() { return 0.5 - Math.random() });
+            for (var i = 0; i < Math.min(3, shuffled.length); i++) {
+                container.innerHTML += '<div class="advice"><div class="advice-title">' + shuffled[i].emoji + ' ' + shuffled[i].title + '</div><p>' + shuffled[i].text + '</p></div>';
+            }
+        }
+
+        function showDistraction() {
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('distractionSection').classList.remove('hidden');
+            newRandomTip();
+        }
+
+        function newRandomTip() {
+            var tip = randomTips[Math.floor(Math.random() * randomTips.length)];
+            document.getElementById('tipEmoji').innerHTML = tip.emoji;
+            document.getElementById('tipText').textContent = tip.text;
+        }
+
+        function restartSurvey() {
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('surveySection').classList.remove('hidden');
+            document.getElementById('progressFill').style.width = '0%';
+            
+            answers = {};
+            initSurvey();
+        }
+
+        function toggleBreathing() {
+            var btn = document.getElementById('breathBtn');
+            var stopBtn = document.getElementById('stopBreathBtn');
+            var circle = document.getElementById('breathCircle');
+            var text = document.getElementById('breathText');
+            
+            if (isBreathing) {
+                clearInterval(breathingInterval);
+                isBreathing = false;
+                btn.style.display = 'block';
+                stopBtn.style.display = 'none';
+                text.textContent = 'Listo... podemos comenzar';
+                circle.style.transform = 'scale(1)';
+                circle.style.opacity = '1';
+            } else {
+                isBreathing = true;
+                btn.style.display = 'none';
+                stopBtn.style.display = 'block';
+                
+                var phase = 0;
+                breathingInterval = setInterval(function() {
+                    if (phase === 0) {
+                        circle.style.transition = 'transform 4s ease-in-out';
+                        circle.style.transform = 'scale(1.3)';
+                        circle.style.opacity = '0.7';
+                        text.textContent = 'Inhala por la nariz... (4s)';
+                    } else if (phase === 1) {
+                        text.textContent = 'Mantien... (4s)';
+                    } else {
+                        circle.style.transition = 'transform 4s ease-in-out';
+                        circle.style.transform = 'scale(1)';
+                        circle.style.opacity = '1';
+                        text.textContent = 'Exhala por la boca... (4s)';
+                    }
+                    phase = (phase + 1) % 3;
+                }, 4000);
+            }
+        }
+
+        function generarQR() {
+            var url = document.getElementById('urlInput').value.trim();
+            if (!url) {
+                alert('Por favor ingresa una URL valida');
+                return;
+            }
+            
+            var qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            
+            var imgQR = document.createElement('img');
+            imgQR.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(url);
+            imgQR.alt = 'QR Code';
+            imgQR.style.borderRadius = '10px';
+            imgQR.style.marginTop = '15px';
+            imgQR.onerror = function() {
+                qrContainer.innerHTML = '<p style="color: red;">Error al cargar QR. Intenta con otra URL.</p>';
+            };
+            
+            qrContainer.appendChild(imgQR);
+            document.getElementById('downloadBtn').style.display = 'block';
+        }
+
+        function downloadQR() {
+            var qrImage = document.querySelector('#qrcode img');
+            if (qrImage && qrImage.src) {
+                var link = document.createElement('a');
+                link.download = 'codigo-qr.png';
+                link.href = qrImage.src;
+                link.click();
+            }
+        }
+
+        initSurvey();
+    </script>
+</body>
+</html>
