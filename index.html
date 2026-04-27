@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluacion de Bienestar Estudiantil</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .todo { max-width: 480px; margin: 0 auto; }
+
+        .tarjeta {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 { color: #1a365d; text-align: center; font-size: 1.3em; margin-bottom: 5px; }
+        h2 { color: #2d3748; text-align: center; font-size: 1.1em; margin-bottom: 10px; }
+        h3 { color: #2d3748; font-size: 1em; margin-bottom: 10px; }
+        p { color: #4a5568; font-size: 0.9em; text-align: center; margin-bottom: 10px; }
+
+        .barra-progreso {
+            width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; margin-bottom: 20px; overflow: hidden;
+        }
+        .progreso { height: 100%; background: #3182ce; transition: width 0.3s; }
+
+        .pregunta-texto { color: #1a365d; font-size: 0.95em; font-weight: bold; margin-bottom: 15px; }
+
+        .opciones { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+
+        .opcion {
+            flex: 1 1 45%; padding: 14px 10px; border: 2px solid #cbd5e0;
+            border-radius: 10px; background: white; cursor: pointer;
+            font-size: 0.8em; font-weight: bold; color: #2d3748;
+            text-align: center; transition: all 0.2s;
+        }
+        .opcion:hover { background: #3182ce; color: white; border-color: #3182ce; }
+        .opcion.seleccionado { background: #1a365d; color: white; border-color: #1a365d; }
+
+        .boton {
+            display: block; width: 100%; padding: 15px; margin: 10px 0;
+            background: #1a365d; color: white; border: none; border-radius: 10px;
+            font-size: 1em; font-weight: bold; cursor: pointer; text-align: center;
+        }
+        .boton:hover { background: #2c5282; }
+
+        .boton-verde { background: #38a169; }
+        .boton-verde:hover { background: #2f855a; }
+
+        .boton-rojo { background: #c53030; }
+        .boton-rojo:hover { background: #9b2c2c; }
+
+        .boton-gris { background: #e2e8f0; color: #1a365d; }
+        .boton-gris:hover { background: #cbd5e0; }
+
+        .navegar {
+            display: inline-block; width: 48%; padding: 12px; margin: 1%;
+            background: #e2e8f0; color: #1a365d; border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer; text-align: center;
+        }
+        .navegar:hover { background: #cbd5e0; }
+
+        .resultado-box {
+            text-align: center; padding: 25px; background: #ebf8ff;
+            border-radius: 15px; margin-bottom: 20px; border: 3px solid #3182ce;
+        }
+        .resultado-emoji { font-size: 4em; margin-bottom: 10px; }
+        .resultado-titulo { color: #1a365d; font-size: 1.5em; font-weight: bold; }
+        .resultado-sub { color: #c53030; font-size: 1.1em; font-weight: bold; margin-top: 8px; }
+        .resultado-sub-verde { color: #38a169; font-size: 1.1em; font-weight: bold; margin-top: 8px; }
+
+        .consejo-box {
+            background: #fffaf0; border-left: 5px solid #dd6b20;
+            padding: 15px; margin: 12px 0; border-radius: 0 10px 10px 0;
+        }
+        .consejo-titulo { color: #c05621; font-weight: bold; font-size: 1em; margin-bottom: 8px; }
+        .consejo-texto { color: #2d3748; font-size: 0.9em; line-height: 1.5; }
+
+        .consejo-emergencia {
+            background: #fed7d7; border-left: 5px solid #c53030;
+            padding: 15px; margin: 12px 0; border-radius: 0 10px 10px 0;
+        }
+        .consejo-emergencia .consejo-titulo { color: #c53030; }
+        .consejo-emergencia .consejo-texto { color: #742a2a; font-weight: bold; }
+
+        .tipos { background: #fef3c7; padding: 20px; border-radius: 15px; text-align: center; margin: 15px 0; }
+        .tipos-emoji { font-size: 3em; margin-bottom: 10px; }
+        .tipos-texto { color: #2d3748; font-size: 1em; }
+
+        .respirar { text-align: center; padding: 20px; background: #f7fafc; border-radius: 15px; margin: 15px 0; }
+        .circulo-resp {
+            width: 100px; height: 100px; background: #1a365d;
+            border-radius: 50%; margin: 15px auto; display: flex;
+            align-items: center; justify-content: center; color: white; font-size: 2em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .resp-texto { font-weight: bold; color: #1a365d; margin-bottom: 10px; }
+
+        .qr-parte { text-align: center; }
+        .qr-input {
+            width: 100%; padding: 15px; border: 2px solid #cbd5e0;
+            border-radius: 10px; font-size: 0.9em; text-align: center; margin-bottom: 15px;
+        }
+        .qr-resultado { min-height: 120px; display: flex; justify-content: center; align-items: center; }
+
+        .escondido { display: none; }
+    </style>
+</head>
+<body>
+    <div class="todo">
+        <h1>Evaluacion de Bienestar</h1>
+        <p>Responde honestamente cada pregunta</p>
+        
+        <!--_encuesta_-->
+        <div class="tarjeta" id="seccionEncuesta">
+            <div class="barra-progreso"><div class="progreso" id="barraProgreso" style="width:0%"></div></div>
+            <div id="contenedorPreguntas"></div>
+        </div>
+
+        <!--_resultados_-->
+        <div class="tarjeta escondido" id="seccionResultados">
+            <div class="resultado-box">
+                <div class="resultado-emoji" id="emojiResult"></div>
+                <div class="resultado-titulo" id="tituloResult"></div>
+                <div id="subtituloResult"></div>
+            </div>
+            
+            <h3 style="text-align:center; margin-bottom:15px;">CONSEJOS PARA TI:</h3>
+            <div id="contenedorConsejos"></div>
+            
+            <div style="text-align:center; margin-top:15px;">
+                <button class="navegar" onclick="mostrarRecursos()">Ver mas consejos</button>
+                <button class="navegar" onclick="reiniciar()">Nueva evaluacion</button>
+            </div>
+        </div>
+
+        <!--_recursos_-->
+        <div class="tarjeta escondido" id="seccionRecursos">
+            <div class="tipos" id="tipos">
+                <div class="tipos-emoji" id="emojiConsejo"></div>
+                <div class="tipos-texto" id="textoConsejo"></div>
+            </div>
+            <button class="boton boton-verde" onclick="otroConsejo()">Otro consejo</button>
+            
+            <div class="respirar">
+                <h3>Ejercicio de respiracion</h3>
+                <p>4s inhale - 4s mantenga - 4s exhale</p>
+                <div class="circulo-resp" id="circuloResp">&#128167;</div>
+                <div class="resp-texto" id="textoResp">Presiona Iniciar</div>
+                <button class="boton" onclick="toggleRespirar()" id="btnIniciar">Iniciar</button>
+                <button class="boton boton-rojo escondido" onclick="toggleRespirar()" id="btnDetener">Detener</button>
+            </div>
+            
+            <button class="boton boton-gris" onclick="volverResultados()">Ver mi resultado</button>
+        </div>
+
+        <!--_QR_-->
+        <div class="tarjeta" id="seccionQR">
+            <div class="qr-parte">
+                <h2>Generar codigo QR</h2>
+                <p>Pega la URL donde subas este archivo</p>
+                <input type="text" class="qr-input" id="inputURL" placeholder="https://tu-sitio.com">
+                <div class="qr-resultado" id="codigoQR"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var preguntas = [
+            { txt: "Frecuencia de sintomas depresivos", ops: ["Nunca", "Rara vez", "A veces", "Frecuente", "Siempre"] },
+            { txt: "Nivel de ansiedad academica", ops: ["Bajo", "Leve", "Moderado", "Alto", "Muy alto"] },
+            { txt: "Calidad del sueno", ops: ["Bien", "Regular", "Mal", "Muy mal", "Insomnio"] },
+            { txt: "Estado de animo", ops: ["Estable", "Leve cambio", "Inestable", "Muy inestable", "Irregular"] },
+            { txt: "Capacidad de concentracion", ops: ["Buena", "Aceptable", "Regular", "Dificil", "Imposible"] },
+            { txt: "Soporte social", ops: ["Solido", "Moderado", "Regular", "Debil", "Ninguno"] },
+            { txt: "Nivel de energia", ops: ["Alto", "Normal", "Bajo", "Muy bajo", "Agotado"] },
+            { txt: "Pensamientos negativos", ops: ["Nunca", "Rara vez", "A veces", "Frecuente", "Permanente"] },
+            { txt: "Uso de sustancias", ops: ["Ninguno", "Rara vez", "Ocasional", "Frecuente", "Habitual"] },
+            { txt: "Sintomas fisicos", ops: ["Ninguno", "Leve", "Moderado", "Severo", "Incapacitante"] }
+        ];
+
+        var respuestas = {};
+        var preguntaActual = 0;
+        var intervaloResp = null;
+        var respirando = false;
+
+        var consejosAlto = [
+            { t: "Busca ayuda profesional", d: "Contacta a un profesional de salud mental o los servicios de psicologia de tu universidad ahora." },
+            { t: "Lineas de ayuda", d: "Telefono prevencion: 900 222 111. Emergencias: 112." },
+            { t: "No estas solo", d: "Buscar ayuda es fuerza.-contacta a un amigo, familiar o tutor de confianza." },
+            { t: "Tu bienestar primero", d: "Prioriza tu salud sobre cualquier calificacion. Considera reducir carga." },
+            { t: "Habla con alguien", d: "No guardes todo para ti. Cuenta a alguien de confianza como te sientes." }
+        ];
+
+        var consejosMedio = [
+            { t: "Practica autocuidado", d: "Haz ejercicio, come bien y establece rutinas de sueno." },
+            { t: "Expresa emociones", d: "Escribe en un diario o habla con alguien sobre como te sientes." },
+            { t: "Conectate con otros", d: "Unete a grupos o actividades para hacer nuevas conexiones." },
+            { t: "Aprende a-relaja-te", d: "Practica respiracion profunda o meditacion para reducir ansiedad." },
+            { t: "Busca recursos", d: "Aprovecha los servicios de orientacion de tu institucion." }
+        ];
+
+        var consejosEstable = [
+            { t: "Felicidades", d: "Estas bien. Continua con las practicas que te mantienen bien." },
+            { t: "Cuida tu salud", d: "Mantiene alimentacion, ejercicio y buenas horas de sueno." },
+            { t: "Fortalece vinculos", d: "Cultiva tus relaciones con amigos y familia." },
+            { t: "Ayuda a otros", d: "Considera mentorizar a estudiantes de cursos inferiores." },
+            { t: "Celebra logros", d: "Reconoce tus avances y celebra tus exitos." }
+        ];
+
+        var consejosRandom = [
+            { e: "&#128161;", d: "Recuerda: las emociones son temporales. Este momento pasara." },
+            { e: "&#129309;", d: "No estas solo. Pedir ayuda es un signo de grandeza." },
+            { e: "&#128170;", d: "Tu valor no depende de tus calificaciones." },
+            { e: "&#128167;", d: "Respira: 4s inhale, 4s hold, 4s exhale." },
+            { e: "&#11088;", d: "Has superado dificultades antes. Puedes hacerlo de nuevo." },
+            { e: "&#127804;", d: "Un nuevo dia = nuevas oportunidades." },
+            { e: "&#9878;", d: "Estas aqui, ahora. Eso es suficiente." },
+            { e: "&hearts;", d: "Tu existencia tiene valor, mas alla de logros." },
+            { e: "&#127752;", d: "Despues de la lluvia, el arcoiris." },
+            { e: "&#129436;", d: "El cambio comienza con un pequeno paso." },
+            { e: "&#127793;", d: "Siempre hay una linea de luz, aunque no la veas." },
+            { e: "&#128293;", d: "Eres mas fuerte de lo que crees." },
+            { e: "&#129309;", d: "Esta bien no estar bien. Pero no tienes que pasar esto solo." },
+            { e: "&#127822;", d: "Busca lo positivo, incluso en dias dificiles." }
+        ];
+
+        function iniciarEncuesta() {
+            var container = document.getElementById('contenedorPreguntas');
+            container.innerHTML = '';
+            
+            for (var i = 0; i < preguntas.length; i++) {
+                var div = document.createElement('div');
+                div.style.display = (i === 0) ? 'block' : 'none';
+                div.id = 'pregunta-' + i;
+                
+                var btns = '';
+                for (var j = 0; j < preguntas[i].ops.length; j++) {
+                    btns += '<button class="opcion" onclick="seleccionar(' + i + ',' + j + ',this)">' + preguntas[i].ops[j] + '</button>';
+                }
+                
+                div.innerHTML = '<div class="pregunta-texto">' + (i+1) + '. ' + preguntas[i].txt + '</div><div class="opciones">' + btns + '</div>';
+                container.appendChild(div);
+            }
+            
+            preguntaActual = 0;
+            actualizarBarra();
+        }
+
+        function seleccionar(idx, optIdx, btn) {
+            var div = document.getElementById('pregunta-' + idx);
+            var btns = div.querySelectorAll('.opcion');
+            for (var i = 0; i < btns.length; i++) btns[i].classList.remove('seleccionado');
+            btn.classList.add('seleccionado');
+            
+            respuestas[idx] = 5 - optIdx;
+            
+            setTimeout(function() {
+                if (idx < preguntas.length - 1) {
+                    document.getElementById('pregunta-' + idx).style.display = 'none';
+                    document.getElementById('pregunta-' + (idx + 1)).style.display = 'block';
+                    preguntaActual = idx + 1;
+                    actualizarBarra();
+                } else {
+                    enviarResultados();
+                }
+            }, 300);
+        }
+
+        function actualizarBarra() {
+            var prog = ((preguntaActual + 1) / preguntas.length) * 100;
+            document.getElementById('barraProgreso').style.width = prog + '%';
+        }
+
+        function enviarResultados() {
+            var puntaje = 0;
+            for (var k in respuestas) puntaje += respuestas[k];
+            var porcentaje = (puntaje / (preguntas.length * 5)) * 100;
+            
+            var nivel = 'estable';
+            if (porcentaje >= 55) nivel = 'alto';
+            else if (porcentaje >= 30) nivel = 'medio';
+            
+            mostrarResultados(nivel);
+        }
+
+        function mostrarResultados(nivel) {
+            document.getElementById('seccionEncuesta').classList.add('escondido');
+            document.getElementById('seccionRecursos').classList.add('escondido');
+            document.getElementById('seccionResultados').classList.remove('escondido');
+            
+            window.scrollTo(0, 0);
+            
+            var consejo, emoji, titulo, subtitulo;
+            if (nivel === 'alto') {
+                consejo = consejosAlto;
+                emoji = '&#9888;';
+                titulo = 'RIESGO ALTO';
+                subtitulo = 'Necesitas ayuda profesional';
+            } else if (nivel === 'medio') {
+                consejo = consejosMedio;
+                emoji = '&#128161;';
+                titulo = 'RIESGO MODERADO';
+                subtitulo = 'Considera buscar apoyo';
+            } else {
+                consejo = consejosEstable;
+                emoji = '&#9989;';
+                titulo = 'ESTABLE';
+                subtitulo = 'Estas bien';
+            }
+            
+            document.getElementById('emojiResult').innerHTML = emoji;
+            document.getElementById('tituloResult').textContent = titulo;
+            
+            var subDiv = document.getElementById('subtituloResult');
+            if (nivel === 'alto') {
+                subDiv.innerHTML = '<div class="resultado-sub">' + subtitulo + '</div>';
+            } else if (nivel === 'medio') {
+                subDiv.innerHTML = '<div class="resultado-sub" style="color:#dd6b20;">' + subtitulo + '</div>';
+            } else {
+                subDiv.innerHTML = '<div class="resultado-sub-verde">' + subtitulo + '</div>';
+            }
+            
+            var container = document.getElementById('contenedorConsejos');
+            container.innerHTML = '';
+            
+            var mezclados = consejo.slice().sort(function() { return 0.5 - Math.random() });
+            for (var i = 0; i < mezclados.length; i++) {
+                container.innerHTML += '<div class="consejo-box"><div class="consejo-titulo">' + (i+1) + '. ' + mezclados[i].t + '</div><div class="consejo-texto">' + mezclados[i].d + '</div></div>';
+            }
+            
+            if (nivel === 'alto') {
+                container.innerHTML += '<div class="consejo-emergencia"><div class="consejo-titulo">&#9888; IMPORTANTE - LINEAS DE AYUDA</div><div class="consejo-texto">Si tienes pensamientos de hacerte dano, contacta ahora:<br><strong>900 222 111</strong> (Prevencion Suicidio)<br><strong>112</strong> (Emergencias)</div></div>';
+            }
+        }
+
+        function mostrarRecursos() {
+            document.getElementById('seccionResultados').classList.add('escondido');
+            document.getElementById('seccionRecursos').classList.remove('escondido');
+            otroConsejo();
+        }
+
+        function otroConsejo() {
+            var c = consejosRandom[Math.floor(Math.random() * consejosRandom.length)];
+            document.getElementById('emojiConsejo').innerHTML = c.e;
+            document.getElementById('textoConsejo').textContent = c.d;
+        }
+
+        function volverResultados() {
+            document.getElementById('seccionRecursos').classList.add('escondido');
+            document.getElementById('seccionResultados').classList.remove('escondido');
+        }
+
+        function reiniciar() {
+            document.getElementById('seccionResultados').classList.add('escondido');
+            document.getElementById('seccionEncuesta').classList.remove('escondido');
+            document.getElementById('barraProgreso').style.width = '0%';
+            respuestas = {};
+            iniciarEncuesta();
+        }
+
+        function toggleRespirar() {
+            var btnIni = document.getElementById('btnIniciar');
+            var btnParar = document.getElementById('btnDetener');
+            var circ = document.getElementById('circuloResp');
+            var txt = document.getElementById('textoResp');
+            
+            if (respirando) {
+                clearInterval(intervaloResp);
+                respirando = false;
+                btnIni.classList.remove('escondido');
+                btnParar.classList.add('escondido');
+                txt.textContent = 'Presiona Iniciar';
+                circ.style.transform = 'scale(1)';
+            } else {
+                respirando = true;
+                btnIni.classList.add('escondido');
+                btnParar.classList.remove('escondido');
+                
+                var fase = 0;
+                intervaloResp = setInterval(function() {
+                    if (fase === 0) {
+                        circ.style.transition = 'transform 4s';
+                        circ.style.transform = 'scale(1.3)';
+                        txt.textContent = 'Inhala...';
+                    } else if (fase === 1) {
+                        txt.textContent = 'Mantiene...';
+                    } else {
+                        circ.style.transition = 'transform 4s';
+                        circ.style.transform = 'scale(1)';
+                        txt.textContent = 'Exhala...';
+                    }
+                    fase = (fase + 1) % 3;
+                }, 4000);
+            }
+        }
+
+        function generarQR() {
+            var url = document.getElementById('inputURL').value.trim();
+            if (!url) return;
+            
+            var cont = document.getElementById('codigoQR');
+            cont.innerHTML = '<span style="color:#718096;">Generando...</span>';
+            
+            setTimeout(function() {
+                cont.innerHTML = '';
+                var img = document.createElement('img');
+                img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(url);
+                img.style.borderRadius = '8px';
+                img.alt = 'Codigo QR';
+                cont.appendChild(img);
+            }, 500);
+        }
+
+        document.getElementById('inputURL').addEventListener('input', generarQR);
+
+        iniciarEncuesta();
+    </script>
+</body>
+</html>
